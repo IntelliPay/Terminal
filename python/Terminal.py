@@ -1,6 +1,7 @@
 import serial
 import json
 
+
 class Terminal:
 
     terminal_type = "v400c-plus"
@@ -42,17 +43,19 @@ class Terminal:
         # Send request to terminal
         self.terminal.open()
 
-        response = ""
+        result = {"status": "failed"}
+        response = {}
         if self.terminal.is_open:
             self.terminal.flushInput()
             self.terminal.flushOutput()
             self.terminal.write(json.dumps(request_json))
             while True:
-                response = self.terminal.readline().decode('ascii')
-                break;
+                response = json.loads(self.terminal.readline().decode('ascii'))
+                break
             self.terminal.close()
-
-        return response
+        if "Response" in response and "ResponseCode" in response["Response"] and response["Response"]["ResponseCode"] == "00":
+            result["status"] = "processed"  # TODO: talk to matt probably should used "approved" instead.
+        return result
 
     def sale(self, amount, options=None):
         return self.process("SALE", amount, options)
