@@ -59,11 +59,12 @@ class Terminal:
                 result["payment-id"] = response["PaymentID"]
             if "ResponseCode" in response and response["ResponseCode"] == "00":
                 result["status"] = "processed"  # TODO: talk to matt probably should used "approved" instead.
-            if "Operation" in response and response["Operation"] == "SALE" or response["Operation"] == "REFUND":
-                result["card-information"] = dict()
-                result["card-information"]["brand"] = response["Card"]["Brand"]
-                result["card-information"]["last4"] = response["Card"]["Last4"]
-                result["card-information"]["expiration"] = response["Card"]["ExpDate"]
+            if "Operation" in response:
+                if response["Operation"] == "SALE" or response["Operation"] == "REFUND":
+                    result["card-information"] = dict()
+                    result["card-information"]["brand"] = response["Card"]["Brand"]
+                    result["card-information"]["last4"] = response["Card"]["Last4"]
+                    result["card-information"]["expiration"] = response["Card"]["ExpDate"]
         return result
 
     def sale(self, amount, options=None):
