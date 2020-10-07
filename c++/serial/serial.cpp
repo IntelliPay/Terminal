@@ -12,7 +12,7 @@
 #include "serial.h"
 
 #ifdef _WIN32
-#include "serial/impl/win.h"
+#include "impl/win.h"
 #else
 #include "impl/unix.h"
 #endif
