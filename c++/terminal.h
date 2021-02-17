@@ -35,13 +35,14 @@ namespace IntelliPayTerminal {
     INTELLIPAY_DLL serial::Serial stty;
 
 
-    INTELLIPAY_DLL bool init(string, string, int, serial::bytesize_t, serial::stopbits_t, serial::flowcontrol_t, bool, int);
+    INTELLIPAY_DLL bool
+    init(string, string, int, serial::bytesize_t, serial::stopbits_t, serial::flowcontrol_t, bool, int);
 
-    INTELLIPAY_DLL json process(string, float, json);
+    INTELLIPAY_DLL string process(string, float, string);
 
-    INTELLIPAY_DLL json sale(float, json);
+    INTELLIPAY_DLL string sale(float, string);
 
-    INTELLIPAY_DLL json refund(float, json);
+    INTELLIPAY_DLL string refund(float, string);
 
 }
 

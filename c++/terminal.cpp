@@ -8,7 +8,7 @@
       inline bool INTELLIPAY_DLL init (string port, string terminal_type = "v400c-plus", int baud_rate = 9600, serial::bytesize_t byte_size = serial::eightbits, serial::stopbits_t stop_bit = serial::stopbits_one, serial::flowcontrol_t xonxoff = serial::flowcontrol_none, bool rtscts = false, int timeout = 0) {
         try {
 
-	    if (terminal_type != "v400c-plus"  && terminal_type != "v200c" && terminal_type != "v400c")
+            if (terminal_type != "v400c-plus"  && terminal_type != "v200c" && terminal_type != "v400c")
                 throw "invalid terminal type.";
 
             intellipay_terminal_type = terminal_type;
@@ -31,12 +31,12 @@
         return true;
     }
 
-    inline json INTELLIPAY_DLL process(string action, float amount, json options = json({})) {
+    inline string INTELLIPAY_DLL process(string action, float amount, string opts = "{}") {
         boost::algorithm::to_upper(action);
         if (action != "SALE" && action != "REFUND" && action != "VOID") {
             throw "invalid action.";
         }
-
+        json options = json::parse(opts);
         json obj;
         obj["Operation"] = action;
 
@@ -86,14 +86,14 @@
                 response["card-information"]["expiration"] = terminal_response["Response"]["Card"]["ExpDate"];
             }
         }
-        return response;
+        return response.dump();
     }
 
-    inline json INTELLIPAY_DLL sale(float amount, json options = json({})) {
+    inline string INTELLIPAY_DLL sale(float amount, string options = "{}") {
         return process("sale", amount, options);
     }
 
-    inline json INTELLIPAY_DLL refund(float amount, json options = json({})){
+    inline string INTELLIPAY_DLL refund(float amount, string options = "{}"){
         return process("refund", amount, options);
     }
 }
