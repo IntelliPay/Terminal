@@ -36,10 +36,11 @@
         if (action != "SALE" && action != "REFUND" && action != "VOID") {
             throw "invalid action.";
         }
+
         json options = json::parse(opts);
+        json request;
         json obj;
         obj["Operation"] = action;
-	obj["Amount"] = amount;
 
         string search_fields[5] = {"Tip", "Invoice", "Clerk", "PaymentItem", "PaymentID"};
 
@@ -48,6 +49,10 @@
                 obj[search_fields[x]] = options[search_fields[x]];
             }
         }
+	
+	obj["Amount"] = amount;
+	request["Request"] = obj;
+	obj = request;
 
         json response;
         response["status"] = "failed";
