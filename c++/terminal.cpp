@@ -39,6 +39,7 @@
         json options = json::parse(opts);
         json obj;
         obj["Operation"] = action;
+	obj["Amount"] = amount;
 
         string search_fields[5] = {"Tip", "Invoice", "Clerk", "PaymentItem", "PaymentID"};
 
