@@ -26,7 +26,6 @@ class Terminal:
     def process(self, action, amount, options=None):
         action = action.upper()
         acceptable_action_types = ["SALE", "REFUND", "VOID"]
-        request_json = {"Amount": amount}
 
         if action not in acceptable_action_types:
             raise Exception("invalid terminal action [" + action + "]")
@@ -34,24 +33,32 @@ class Terminal:
         if action == "VOID" and "PaymentID" not in options:
             raise Exception(action + " requires a PaymentID")
 
-        request_json["Operator"] = action
+        request_json["Operation"] = action
+        request_json = {"Amount": amount}
 
-        for field in ["Tip", "Invoice", "Clerk", "PaymentItem", "PaymentID"]:
-            if field in options:
-                request_json[field] = options[field]
+        if options is not None:
+            for field in ["Tip", "Invoice", "Clerk", "PaymentItem", "PaymentID"]:
+                if field in options:
+                    request_json[field] = options[field]
+
+        request_json = { "Request": request_json }
 
         # Send request to terminal
         self.terminal.open()
+        if (self.terminal.isOpen()):
+            print("Connection is open.")
 
         result = {"status": "failed"}
         response = {}
         if self.terminal.is_open:
             self.terminal.flushInput()
             self.terminal.flushOutput()
-            self.terminal.write(json.dumps(request_json))
+            self.terminal.write(bytes(json.dumps(request_json), 'ascii'))
             while True:
-                response = json.loads(self.terminal.readline().decode('ascii'))
-                break
+                data = self.terminal.readline()
+                if len(data) > 0:
+                    response = json.loads(self.terminal.readline().decode('ascii'))
+                    break
             self.terminal.close()
         if "Response" in response:
             response = response["Response"]

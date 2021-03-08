@@ -41,8 +41,10 @@ class Terminal(_terminalType: String = "v400c-plus", _baudRate: Int = 9600, _byt
                 }
             }
         }
+        var requestWrapMap: HashMap<String, Any?> = HashMap<String, Any?>()
+	requestWrapMap["Request"] = requestMap
         val gson = Gson()
-        val requestString :String = gson.toJson(requestMap)
+        val requestString :String = gson.toJson(requestWrapMap)
         val requestByteArray :ByteArray = requestString.toByteArray(Charsets.UTF_8)
         val responseByteArray :ByteArray = ByteArray(255)
         terminal.openPort()

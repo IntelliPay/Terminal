@@ -7,7 +7,7 @@
  * http://opensource.org/licenses/MIT
  */
 
-#include "serial/serial.h"
+#include "../../serial.h"
 #include <tchar.h>
 #include <windows.h>
 #include <setupapi.h>
@@ -36,11 +36,11 @@ vector<PortInfo>
 serial::list_ports()
 {
 	vector<PortInfo> devices_found;
-
+/*
 	HDEVINFO device_info_set = SetupDiGetClassDevs(
 		(const GUID *) &GUID_DEVCLASS_PORTS,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		DIGCF_PRESENT);
 
 	unsigned int device_info_set_index = 0;
@@ -68,8 +68,8 @@ serial::list_ports()
 		LONG return_code = RegQueryValueEx(
 					hkey,
 					_T("PortName"),
-					NULL,
-					NULL,
+					nullptr,
+					nullptr,
 					(LPBYTE)port_name,
 					&port_name_length);
 
@@ -85,7 +85,7 @@ serial::list_ports()
 
 		// Ignore parallel ports
 
-		if(_tcsstr(port_name, _T("LPT")) != NULL)
+		if(_tcsstr(port_name, _T("LPT")) != nullptr)
 			continue;
 
 		// Get port friendly name
@@ -97,7 +97,7 @@ serial::list_ports()
 					device_info_set,
 					&device_info_data,
 					SPDRP_FRIENDLYNAME,
-					NULL,
+					nullptr,
 					(PBYTE)friendly_name,
 					friendly_name_max_length,
 					&friendly_name_actual_length);
@@ -116,7 +116,7 @@ serial::list_ports()
 					device_info_set,
 					&device_info_data,
 					SPDRP_HARDWAREID,
-					NULL,
+					nullptr,
 					(PBYTE)hardware_id,
 					hardware_id_max_length,
 					&hardware_id_actual_length);
@@ -145,7 +145,7 @@ serial::list_ports()
 	}
 
 	SetupDiDestroyDeviceInfoList(device_info_set);
-
+*/
 	return devices_found;
 }
 
