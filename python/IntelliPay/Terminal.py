@@ -23,6 +23,14 @@ class Terminal:
         self.terminal.port = port
         self.terminal.parity = serial.PARITY_NONE
 
+    def prep_message(self, message):
+        lrc = ord(message[0])
+        for i in range(1, len(message)):
+            lrc ^= ord(message[i])
+        message =  str(chr(2)) + message + str(chr(3))
+        prep = message + str(chr(lrc))
+        return prep
+
     def process(self, action, amount, options=None):
         action = action.upper()
         acceptable_action_types = ["SALE", "REFUND", "VOID"]
@@ -53,7 +61,7 @@ class Terminal:
         if self.terminal.is_open:
             self.terminal.flushInput()
             self.terminal.flushOutput()
-            self.terminal.write(bytes(json.dumps(request_json), 'ascii'))
+            self.terminal.write(bytes(self.prep_message(json.dumps(request_json)), 'ascii'))
             while True:
                 data = self.terminal.readline()
                 if len(data) > 0:
