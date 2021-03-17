@@ -24,10 +24,11 @@ class Terminal:
         self.terminal.parity = serial.PARITY_NONE
 
     def prep_message(self, message):
+        message = message + str(chr(3))
         lrc = ord(message[0])
         for i in range(1, len(message)):
             lrc ^= ord(message[i])
-        message =  str(chr(2)) + message + str(chr(3))
+        message =  str(chr(2)) + message
         prep = message + str(chr(lrc))
         return prep
 
